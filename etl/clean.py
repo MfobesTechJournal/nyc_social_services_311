@@ -1,4 +1,4 @@
-# etl/clean.py
+
 import pandas as pd
 import boto3
 from dotenv import load_dotenv
@@ -17,23 +17,31 @@ def extract_and_clean():
     df = df[['Unique Key', 'Created Date', 'Complaint Type', 'Agency', 'Borough', 'Incident Zip']].copy()
     df.columns = ['unique_key', 'created_date', 'complaint_type', 'agency', 'borough', 'incident_zip']
 
-    # FIX: Boroughs are in 'Unspecified' or mixed case
-    df['borough'] = df['borough'].str.title().str.strip()
+    from datetime import datetime
+
+   
     valid_boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island', 'Unspecified']
-    
+    df['borough'] = df['borough'].astype(str).str.strip().str.title()
     invalid_borough = ~df['borough'].isin(valid_boroughs)
-    if invalid_borough.sum() > 0:
-        logger.warning(f"Dropping {invalid_borough.sum()} invalid boroughs")
-        df = df[df['borough'].isin(valid_boroughs)]
+    if invalid_borough.sum():
+        logger.warning(f"Dropping {invalid_borough.sum()} rows with invalid borough")
+        df = df[~invalid_borough]
 
+    
     df['created_date'] = pd.to_datetime(df['created_date'], errors='coerce')
-    df = df.dropna(subset=['unique_key', 'created_date'])
+    future_dates = df['created_date'] > pd.Timestamp.now()
+    if future_dates.sum():
+        logger.warning(f"Dropping {future_dates.sum()} future dates")
+        df = df[~future_dates]
 
+   
     df['incident_zip'] = pd.to_numeric(df['incident_zip'], errors='coerce')
     invalid_zip = df['incident_zip'].isna() | (df['incident_zip'] < 10000) | (df['incident_zip'] > 99999)
-    if invalid_zip.sum() > 0:
-        logger.warning(f"Dropping {invalid_zip.sum()} invalid zips")
+    if invalid_zip.sum():
+        logger.warning(f"Dropping {invalid_zip.sum()} invalid zip codes")
         df = df[~invalid_zip]
+
+    df = df.dropna(subset=['unique_key', 'created_date', 'complaint_type'])
 
     before = len(df)
     df = df.drop_duplicates(subset=['unique_key'])
