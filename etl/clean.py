@@ -1,4 +1,4 @@
-# etl/clean.py
+
 import pandas as pd
 import boto3
 from dotenv import load_dotenv
@@ -19,7 +19,7 @@ def extract_and_clean():
 
     from datetime import datetime
 
-    # Boroughs validation
+   
     valid_boroughs = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island', 'Unspecified']
     df['borough'] = df['borough'].astype(str).str.strip().str.title()
     invalid_borough = ~df['borough'].isin(valid_boroughs)
@@ -27,14 +27,14 @@ def extract_and_clean():
         logger.warning(f"Dropping {invalid_borough.sum()} rows with invalid borough")
         df = df[~invalid_borough]
 
-    #Future dates
+    
     df['created_date'] = pd.to_datetime(df['created_date'], errors='coerce')
     future_dates = df['created_date'] > pd.Timestamp.now()
     if future_dates.sum():
         logger.warning(f"Dropping {future_dates.sum()} future dates")
         df = df[~future_dates]
 
-    # Zip code format
+   
     df['incident_zip'] = pd.to_numeric(df['incident_zip'], errors='coerce')
     invalid_zip = df['incident_zip'].isna() | (df['incident_zip'] < 10000) | (df['incident_zip'] > 99999)
     if invalid_zip.sum():
