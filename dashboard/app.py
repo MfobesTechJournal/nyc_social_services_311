@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 import logging
 
-# === CONFIG ===
+
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,7 +15,6 @@ CONNECT_STR = os.getenv("AZURE_CONNECTION_STRING")
 CONTAINER_NAME = "data"
 BLOB_NAME = "fact_311_clean.parquet"
 
-# === DOWNLOAD FROM AZURE ===
 @st.cache_data
 def load_data():
     try:
@@ -33,7 +32,7 @@ def load_data():
         st.error(f"Failed to load data: {e}")
         return pd.DataFrame()
 
-# === STREAMLIT APP ===
+
 st.set_page_config(page_title="NYC 311 Dashboard", layout="wide")
 st.title("NYC 311 Social Services Dashboard")
 st.markdown("**Live data from Azure Blob Storage**")
@@ -43,13 +42,13 @@ df = load_data()
 if df.empty:
     st.stop()
 
-# === METRICS ===
+
 col1, col2, col3 = st.columns(3)
 col1.metric("Total Complaints", len(df))
 col2.metric("Unique Agencies", df['agency'].nunique())
 col3.metric("Date Range", f"{df['created_date'].min().date()} → {df['created_date'].max().date()}")
 
-# === CHARTS ===
+
 st.subheader("Top 5 Complaint Types")
 top5 = df['complaint_type'].value_counts().head(5)
 st.bar_chart(top5)
@@ -58,7 +57,7 @@ st.subheader("Complaints by Borough")
 borough_counts = df['borough'].value_counts()
 st.pyplot(borough_counts.plot.pie(autopct='%1.1f%%', figsize=(6,6)).figure)
 
-# === FILTERABLE TABLE ===
+
 st.subheader("All Complaints (Filterable)")
 borough_filter = st.multiselect("Filter by Borough", options=sorted(df['borough'].unique()), default=[])
 if borough_filter:
