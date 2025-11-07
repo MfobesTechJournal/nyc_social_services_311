@@ -1,4 +1,3 @@
-# sql/run_schema.py
 import mysql.connector
 from dotenv import load_dotenv
 import os
@@ -36,3 +35,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
