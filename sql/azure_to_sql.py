@@ -1,4 +1,4 @@
-# sql/azure_to_sql.py
+
 import pandas as pd
 from azure.storage.blob import BlobServiceClient
 from sqlalchemy import create_engine
@@ -9,12 +9,12 @@ import logging
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-# Azure
+
 AZURE_CONN = os.getenv("AZURE_CONNECTION_STRING")
 CONTAINER   = os.getenv("AZURE_CONTAINER_NAME", "data")
 BLOB        = "fact_311_clean.parquet"
 
-# MySQL
+
 MYSQL_URL = (
     f"mysql+mysqlconnector://"
     f"{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@"
@@ -41,3 +41,4 @@ def load_to_mysql(parquet_path):
 if __name__ == "__main__":
     path = download()
     load_to_mysql(path)
+
