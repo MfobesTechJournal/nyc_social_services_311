@@ -25,8 +25,8 @@ ETL Pipeline
 ---------------------
 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/nyc_social_services_311.git
-cd nyc_social_services_311
+git clone https://github.com/mfobestechjournal/nyc_social_services_311.git
+change directory -> nyc_social_services_311
 ```
 ```
 
