@@ -72,7 +72,6 @@ Format: CSV
 Cloud Integration
 -------------------
 - Azure Blob Storage: Stores raw and processed data files  
-- MySQL on Azure: Centralized storage for analytics  
 - db_to_azure.py: Exports database results back to the cloud  
 
 ---
