@@ -9,7 +9,7 @@ pandas, SQLAlchemy, azure-storage-blob
 ---
  Features:
  ---------------------
-  SQL Analysis
+- SQL Analysis
 - Schema creation  
 - Aggregations using `GROUP BY`, `HAVING`, and joins  
 - CRUD operations (Create, Read, Update, Delete)  
@@ -28,20 +28,14 @@ ETL Pipeline
 git clone https://github.com/yourusername/nyc_social_services_311.git
 cd nyc_social_services_311
 ```
-
-2. Create a Virtual Environment
-```bash
-python -m venv venv
-source venv/bin/activate   # On macOS/Linux
-venv\Scripts\activate      # On Windows
 ```
 
-3. Install Dependencies
+2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-4.  Configure Environment Variables
+3.  Configure Environment Variables
 Create a `.env` 
 ```
 AZURE_CONNECTION_STRING=
@@ -51,19 +45,19 @@ MYSQL_PASSWORD=
 MYSQL_DB=nyc_social_services
 ```
 
-5. Run Database Schema
+4. Run Database Schema
 ```bash
 python sql/run_schema.py
 ```
 
- 6. Execute ETL Pipeline
+ 5. Execute ETL Pipeline
 ```bash
 python sql/azure_to_sql.py
 ```
 
- 7. Launch Dashboard
+ 6. Launch Dashboard
 ```bash
-streamlit run dashboard/app.py
+streamlit run 
 ```
 
 ---
